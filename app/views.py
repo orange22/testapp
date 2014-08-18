@@ -9,9 +9,10 @@ from flask import render_template, session, request, redirect, url_for
 
 @app.route("/")
 def index():
+    form = SearchForm()
     books=Book.query.order_by(desc('id')).limit(5).all()
     authors=Author.query.order_by(desc('id')).limit(5).all()
-    return render_template('index.html',books=books,authors=authors)
+    return render_template('index.html',books=books,authors=authors,form=form)
 
 @app.route("/authors")
 def authors():
@@ -104,7 +105,7 @@ def logout():
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-    form = SearchForm()
+    searchform = SearchForm()
     if request.form:
         term = request.form['search']
     else:
@@ -113,7 +114,7 @@ def search():
         join(Book.authors).\
         join(AuthorBook.author).\
         filter(or_(Book.name.like('%'+term+'%'),Author.name.like('%'+term+'%')))
-    return render_template('search.html',books=books,form=form)
+    return render_template('search.html',books=books,form=searchform)
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
