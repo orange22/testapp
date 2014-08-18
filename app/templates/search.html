@@ -1,5 +1,12 @@
 {% extends "layout/layout.html" %}
 {% block container %}
+      <h2 class="sub-header">Поиск по книгам</h2>
+      {% from "_formhelpers.html" import render_field %}
+          <form role="form" method="post" action="/search">
+            {{ form.hidden_tag() }}
+            {{ render_field(form.search,class="form-control") }}
+            <input type="submit" class="btn btn-success btn-lg btn-sm" value="Поиск">
+          </form>
       <h2 class="sub-header">Книги</h2>
       <div class="table-responsive">
             <table class="table table-striped">

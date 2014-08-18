@@ -4,7 +4,6 @@
       <div class="span3">
       <h2 class="sub-header">{% if book.id %}Редактирование книги: {{ book.name }}{% else %}Добавление книги{% endif %}</h2>
       {% from "_formhelpers.html" import render_field %}
-
           <form role="form" method="post" action="/book/edit">
             {{ form.hidden_tag() }}
             {{ form.id(type="hidden") }}

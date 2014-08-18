@@ -102,16 +102,18 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
 
-@app.route('/test')
-def test():
-    # remove the username from the session if it's there
-    #books=Book.query.order_by(desc('id')).limit(5).all()
-    term = 'author'
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    form = SearchForm()
+    if request.form:
+        term = request.form['search']
+    else:
+        term = '';
     books=Book.query.\
         join(Book.authors).\
         join(AuthorBook.author).\
         filter(or_(Book.name.like('%'+term+'%'),Author.name.like('%'+term+'%')))
-    return render_template('search.html',books=books)
+    return render_template('search.html',books=books,form=form)
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
