@@ -35,8 +35,8 @@ def delete(instance=None,obj_id=None):
             obj = Author.query.filter_by(id=obj_id).first()
         if instance == 'book':
             obj = Book.query.filter_by(id=obj_id).first()
-        db_session.delete(obj)
-        db_session.commit()
+        db.session.delete(obj)
+        db.session.commit()
         return redirect('/'+instance+'s')
     else:
         return redirect('/')
@@ -53,10 +53,10 @@ def edit_author(author_id=None):
     if request.method == 'POST' and form.validate():
         author = Author(form.name.data)
         if form.id.data:
-            db_session.query(Author).filter_by(id=form.id.data).update({"name": form.name.data})
+            db.session.query(Author).filter_by(id=form.id.data).update({"name": form.name.data})
         else:
-            db_session.add(author)
-        db_session.commit()
+            db.session.add(author)
+        db.session.commit()
         return redirect('/')
 
 
@@ -76,6 +76,7 @@ def edit_book(book_id=None):
     #pprint (vars(form))
 
     if request.method == 'POST' and form.validate():
+
         book = Book(form.name.data)
         if form.id.data:
             db.session.query(Book).filter_by(id=form.id.data).update({"name": form.name.data})
