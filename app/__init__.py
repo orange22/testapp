@@ -1,10 +1,15 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
+from database import init_db
 
 app = Flask(__name__)
 Bootstrap(app)
 app.config.from_object('config')
-db = SQLAlchemy(app)
+
+init_db()
+
+
+#db = SQLAlchemy(app)
 
 from app import views, models
