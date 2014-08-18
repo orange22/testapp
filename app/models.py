@@ -1,10 +1,12 @@
 __author__ = 'orange'
-from app import db
+from app import db, app
+import flask.ext.whooshalchemy as whooshalchemy
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
 
 class Book(db.Model):
+    __searchable__ = ['name']
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64), index = True)
 
@@ -23,3 +25,5 @@ class Author(db.Model):
 
     def __repr__(self):
         return '<Author %r>' % (self.name)
+
+whooshalchemy.whoosh_index(app, Book)
