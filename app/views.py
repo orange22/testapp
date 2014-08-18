@@ -2,7 +2,7 @@ __author__ = 'orange'
 from app import app
 from app.models import *
 from app.forms import *
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 from database import db_session
 from flask import render_template, session, request, redirect, url_for
 
@@ -106,7 +106,11 @@ def logout():
 def test():
     # remove the username from the session if it's there
     #books=Book.query.order_by(desc('id')).limit(5).all()
-    books = Book.query.whoosh_search('%book%')
+    term = 'author'
+    books=Book.query.\
+        join(Book.authors).\
+        join(AuthorBook.author).\
+        filter(or_(Book.name.like('%'+term+'%'),Author.name.like('%'+term+'%')))
     return render_template('search.html',books=books)
 
 @app.teardown_appcontext
