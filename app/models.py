@@ -2,7 +2,9 @@ __author__ = 'Orange'
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
+import flask.ext.whooshalchemy as whooshalchemy
 from database import Base
+from app import app
 
 class AuthorBook(Base):
     __tablename__ = 'author_book'
@@ -37,3 +39,5 @@ class Book(Base):
 
     def __repr__(self):
         return '<Book %r>' % (self.name)
+
+whooshalchemy.whoosh_index(app, Book)

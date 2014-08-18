@@ -108,3 +108,7 @@ def test():
     #books=Book.query.order_by(desc('id')).limit(5).all()
     books = Book.query.whoosh_search('%book%')
     return render_template('search.html',books=books)
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
