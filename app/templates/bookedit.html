@@ -1,0 +1,27 @@
+{% extends "layout/layout.html" %}
+{% block container %}
+    <div class="row">
+      <div class="span3">
+      <h2 class="sub-header">{% if book.id %}Редактирование книги: {{ book.name }}{% else %}Добавление книги{% endif %}</h2>
+      {% from "_formhelpers.html" import render_field %}
+
+          <form role="form" method="post" action="/book/edit">
+            {{ form.hidden_tag() }}
+            {{ form.id(type="hidden") }}
+            {%  if book.id %}
+            <div class="form-group">
+                <label class="control-label">{{ form.id.label }}</label>
+                <div class="form-control">
+                  <p>{{ form.id.data }}</p>
+                </div>
+              </div>
+            {% endif %}
+            {{ render_field(form.name,class="form-control") }}
+            <input type="submit" class="btn btn-success btn-lg btn-sm" value="Сохранить">
+            {% if book.id %}
+            <a type="button" href="{{ url_for('delete', instance='book', obj_id=book.id) }}" class="btn btn-danger btn-lg btn-sm">Удалить</a>
+            {% endif %}
+            <a type="button" href="{{ url_for('books') }}" class="btn btn-primary btn-lg btn-sm">Отмена</a>
+          </form>
+        </div>
+{% endblock %}

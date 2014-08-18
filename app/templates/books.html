@@ -1,0 +1,43 @@
+{% extends "layout/layout.html" %}
+{% block container %}
+      <h2 class="sub-header">Книги</h2>
+      <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Название</th>
+                  <th>Книги</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for book in books %}
+                <tr>
+                  <td>{{ book.id }}</td>
+                  <td><a href="/book/{{ book.id }}">{{ book.name }}</a></td>
+                  <td>
+                      {% for author in book.authors %}
+                       <a href="/author/{{ author.author.id }}">{{ author.author.name }}</a>
+                      {% endfor %}
+                  </td>
+                  <td>
+                      {% if session['username'] %}
+                      <a class="update" title="Редактировать" href="{{ url_for('edit_book', book_id=book.id) }}">
+                          <img src="/static/update.png" alt="Редактировать">
+                      </a>
+                      <a class="delete" title="Удалить" href="{{ url_for('delete', instance='book', obj_id=book.id) }}">
+                          <img src="/static/delete.png" alt="Удалить">
+                      </a>
+                      {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <p>
+                {% if session['username'] %}
+                <a type="button" href="/book/create" class="btn btn-success btn-lg btn-sm">Добавить</a>
+                {% endif %}
+            </p>
+{% endblock %}
