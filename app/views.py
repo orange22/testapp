@@ -105,5 +105,5 @@ def logout():
 def test():
     # remove the username from the session if it's there
     #books=Book.query.order_by(desc('id')).limit(5).all()
-    books = Book.query.whoosh_search('bok')
+    books = Book.query.whoosh_search('%book%')
     return render_template('search.html',books=books)

@@ -1,5 +1,6 @@
 __author__ = 'orange'
-from app import db, app
+from app import db
+from app import app
 import flask.ext.whooshalchemy as whooshalchemy
 
 ROLE_USER = 0
