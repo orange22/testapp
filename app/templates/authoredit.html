@@ -19,7 +19,7 @@
             {{ render_field(form.name,class="form-control") }}
             <input type="submit" class="btn btn-success btn-lg btn-sm" value="Сохранить">
             {% if author.id %}
-            <a type="button" href="{{ url_for('delete', instance='author', obj_id=author.id) }}" class="btn btn-danger btn-lg btn-sm">Удалить</a>
+            <a type="button" data-toggle="modal" data-target="#confirm-delete" data-href="{{ url_for('delete', instance='author', obj_id=author.id) }}" class="btn btn-danger btn-lg btn-sm">Удалить</a>
             {% endif %}
             <a type="button" href="{{ url_for('authors') }}" class="btn btn-primary btn-lg btn-sm">Отмена</a>
           </form>

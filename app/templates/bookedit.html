@@ -25,7 +25,7 @@
 
             <input type="submit" class="btn btn-success btn-lg btn-sm" value="Сохранить">
             {% if book.id %}
-            <a type="button" href="{{ url_for('delete', instance='book', obj_id=book.id) }}" class="btn btn-danger btn-lg btn-sm">Удалить</a>
+            <a type="button" data-toggle="modal" data-target="#confirm-delete" data-href="{{ url_for('delete', instance='book', obj_id=book.id) }}" href="#" class="btn btn-danger btn-lg btn-sm">Удалить</a>
             {% endif %}
             <a type="button" href="{{ url_for('books') }}" class="btn btn-primary btn-lg btn-sm">Отмена</a>
           </form>
