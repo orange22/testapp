@@ -8,8 +8,8 @@
               <tbody>
                 {% for author in book.authors %}
                 <tr>
-                  <td>{{ author.author.id }}</td>
-                  <td><a href="/author/{{ author.author.id }}">{{ author.author.name }}</a></td>
+                  <td>{{ author.id }}</td>
+                  <td><a href="/author/{{ author.id }}">{{ author.name }}</a></td>
                 </tr>
                 {% endfor %}
               </tbody>

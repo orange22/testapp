@@ -25,7 +25,7 @@
                   <td><a href="/book/{{ book.id }}">{{ book.name }}</a></td>
                   <td>
                       {% for author in book.authors %}
-                       <a href="/author/{{ author.author.id }}">{{ author.author.name }}</a>
+                       <a href="/author/{{ author.id }}">{{ author.name }}</a>
                       {% endfor %}
                   </td>
                   <td>

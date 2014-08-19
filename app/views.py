@@ -120,7 +120,6 @@ def search():
         term = '';
     books=Book.query.\
         join(Book.authors).\
-        join(AuthorBook.author).\
         filter(or_(Book.name.like('%'+term+'%'),Author.name.like('%'+term+'%')))
     return render_template('search.html',books=books,form=searchform)
 
