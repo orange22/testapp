@@ -82,11 +82,15 @@ def edit_book(book_id=None):
         form.authors.data=map(str, [(g.id) for g in model.authors])
 
     if request.method == 'POST':
-        book = Book(form.name.data,Author.query.filter(Author.id.in_(form.authors.data)).all())
+
 
         if form.id.data:
-            db_session.query(Book).filter_by(id=form.id.data).update({"name": form.name.data})
+            model=Book.query.filter_by(id=form.id.data).first()
+            model.name = form.name.data
+            model.authors = Author.query.filter(Author.id.in_(form.authors.data)).all()
+            db_session.commit()
         else:
+            book = Book(form.name.data,Author.query.filter(Author.id.in_(form.authors.data)).all())
             db_session.add(book)
 
         authors = request.form.getlist('authors')

@@ -40,7 +40,7 @@ class Book(Base):
     #authors = relationship("AuthorBook")
     authors = relationship("Author", secondary=lambda: author_book)
 
-    def __init__(self, name=None,authors=None):
+    def __init__(self, name=None, authors=None):
         self.name = name
         self.authors = authors
 
