@@ -1,4 +1,5 @@
 __author__ = 'orange'
+import pprint
 from app import app
 from app.models import *
 from app.forms import *
@@ -75,16 +76,26 @@ def show_book(book_id):
 def edit_book(book_id=None):
     model=Book.query.filter_by(id=book_id).first()
     form = BookForm(request.form, model)
-    #pprint (vars(form))
 
-    if request.method == 'POST' and form.validate():
-
+    if request.method == 'POST':
         book = Book(form.name.data)
         if form.id.data:
+            links=AuthorBook.query.filter_by(book_id=form.id.data).delete()
             db_session.query(Book).filter_by(id=form.id.data).update({"name": form.name.data})
         else:
             db_session.add(book)
+
+        authors = request.form.getlist('authors')
         db_session.commit()
+
+
+
+        for author in authors:
+            authorbook = AuthorBook(author,form.id.data if form.id.data else book.id)
+            db_session.add(authorbook)
+            db_session.commit()
+            pprint.pprint(authorbook)
+
         return redirect('/')
 
 
@@ -115,6 +126,11 @@ def search():
         join(AuthorBook.author).\
         filter(or_(Book.name.like('%'+term+'%'),Author.name.like('%'+term+'%')))
     return render_template('search.html',books=books,form=searchform)
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    pprint.pprint(123)
+    return '22'
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):

@@ -15,7 +15,14 @@
                 </div>
               </div>
             {% endif %}
-            {{ render_field(form.name,class="form-control") }}
+            <div class="form-group">
+                {{ render_field(form.name,class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ render_field(form.authors,class="form-control") }}
+            </div>
+
             <input type="submit" class="btn btn-success btn-lg btn-sm" value="Сохранить">
             {% if book.id %}
             <a type="button" href="{{ url_for('delete', instance='book', obj_id=book.id) }}" class="btn btn-danger btn-lg btn-sm">Удалить</a>
