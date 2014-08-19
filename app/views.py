@@ -83,7 +83,6 @@ def edit_book(book_id=None):
 
     if request.method == 'POST':
 
-
         if form.id.data:
             model=Book.query.filter_by(id=form.id.data).first()
             model.name = form.name.data
@@ -93,17 +92,7 @@ def edit_book(book_id=None):
             book = Book(form.name.data,Author.query.filter(Author.id.in_(form.authors.data)).all())
             db_session.add(book)
 
-        authors = request.form.getlist('authors')
         db_session.commit()
-
-
-
-        for author in authors:
-            #authorbook = AuthorBook(author,form.id.data if form.id.data else book.id)
-            #db_session.add(authorbook)
-            #db_session.commit()
-            pprint.pprint(author)
-
         return redirect('/')
 
 
