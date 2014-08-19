@@ -75,12 +75,16 @@ def show_book(book_id):
 @app.route('/book/edit/<int:book_id>')
 def edit_book(book_id=None):
     model=Book.query.filter_by(id=book_id).first()
-    form = BookForm(request.form, model)
+    form = BookForm(request.form)
+    if book_id:
+        form.id.data=model.id
+        form.name.data=model.name
+        form.authors.data=map(str, [(g.id) for g in model.authors])
 
     if request.method == 'POST':
-        book = Book(form.name.data)
+        book = Book(form.name.data,Author.query.filter(Author.id.in_(form.authors.data)).all())
+
         if form.id.data:
-            links=AuthorBook.query.filter_by(book_id=form.id.data).delete()
             db_session.query(Book).filter_by(id=form.id.data).update({"name": form.name.data})
         else:
             db_session.add(book)
@@ -91,10 +95,10 @@ def edit_book(book_id=None):
 
 
         for author in authors:
-            authorbook = AuthorBook(author,form.id.data if form.id.data else book.id)
-            db_session.add(authorbook)
-            db_session.commit()
-            pprint.pprint(authorbook)
+            #authorbook = AuthorBook(author,form.id.data if form.id.data else book.id)
+            #db_session.add(authorbook)
+            #db_session.commit()
+            pprint.pprint(author)
 
         return redirect('/')
 
