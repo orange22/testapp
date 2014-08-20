@@ -8,14 +8,6 @@
           <form role="form" method="post" action="/author/edit">
             {{ form.hidden_tag() }}
             {{ form.id(type="hidden") }}
-            {%  if author.id %}
-            <div class="form-group">
-                <label class="control-label">{{ form.id.label }}</label>
-                <div class="form-control">
-                  <p>{{ form.id.data }}</p>
-                </div>
-              </div>
-            {% endif %}
             {{ render_field(form.name,class="form-control")|safe }}
             <input type="submit" class="btn btn-success btn-lg btn-sm" value="Сохранить">
             {% if author.id %}

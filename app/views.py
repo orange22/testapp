@@ -6,8 +6,16 @@ from app.forms import *
 from sqlalchemy import desc, or_
 from database import db_session
 from flask import render_template, session, request, redirect, url_for
+from functools import wraps
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route("/")
 def index():
@@ -37,8 +45,8 @@ def show_author(author_id):
     return render_template('author.html',author=author,loginform=loginform)
 
 @app.route('/<instance>/delete/<int:obj_id>')
+@login_required
 def delete(instance=None,obj_id=None):
-    if session['username']:
         if instance == 'author':
             obj = Author.query.filter_by(id=obj_id).first()
         if instance == 'book':
@@ -46,13 +54,12 @@ def delete(instance=None,obj_id=None):
         db_session.delete(obj)
         db_session.commit()
         return redirect('/'+instance+'s')
-    else:
-        return redirect('/')
 
 
 @app.route('/author/create')
 @app.route('/author/edit', methods=['GET', 'POST'])
 @app.route('/author/edit/<int:author_id>')
+@login_required
 def edit_author(author_id=None):
     model=Author.query.filter_by(id=author_id).first()
     form = AuthorForm(request.form, model)
@@ -79,6 +86,7 @@ def show_book(book_id):
 @app.route('/book/create')
 @app.route('/book/edit', methods=['GET', 'POST'])
 @app.route('/book/edit/<int:book_id>')
+@login_required
 def edit_book(book_id=None):
     if not session['username']:
         return redirect(url_for('index'))

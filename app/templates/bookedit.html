@@ -7,14 +7,6 @@
           <form role="form" method="post" action="/book/edit">
             {{ form.hidden_tag() }}
             {{ form.id(type="hidden") }}
-            {%  if (book.id or form.id) %}
-            <div class="form-group">
-                <label class="control-label">{{ form.id.label }}</label>
-                <div class="form-control">
-                  <p>{{ form.id.data }}</p>
-                </div>
-              </div>
-            {% endif %}
             <div class="form-group">
                 {{ render_field(form.name,class="form-control") }}
             </div>
