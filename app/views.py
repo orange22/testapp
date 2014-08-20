@@ -142,11 +142,6 @@ def search():
        filter(or_(Book.name.like('%'+term+'%'),Author.name.like('%'+term+'%')))
     return render_template('search.html',books=books,form=searchform,loginform=loginform)
 
-@app.route('/test', methods=['GET', 'POST'])
-def test():
-    pprint.pprint(123)
-    return '22'
-
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()
