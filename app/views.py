@@ -137,8 +137,9 @@ def search():
     else:
         term = '';
     books=Book.query.\
-        join(Book.authors).\
-        filter(or_(Book.name.like('%'+term+'%'),Author.name.like('%'+term+'%')))
+       join(Book.auth).\
+       join(AuthorBook.author).\
+       filter(or_(Book.name.like('%'+term+'%'),Author.name.like('%'+term+'%')))
     return render_template('search.html',books=books,form=searchform,loginform=loginform)
 
 @app.route('/test', methods=['GET', 'POST'])

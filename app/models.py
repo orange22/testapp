@@ -1,22 +1,17 @@
 __author__ = 'Orange'
-#from sqlalchemy import Table, Column, Integer, String, ForeignKey
-#from sqlalchemy.orm import relationship, backref
-#from sqlalchemy.ext.declarative import declarative_base
 from database import Base
-
-
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
-
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declarative_base
-
 
 class Book(Base):
     __tablename__ = 'book'
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
     authors = association_proxy('author_book', 'author')
+
+    auth = relationship("AuthorBook")
 
     def __init__(self, name=None, authors=None):
         self.name = name
@@ -34,9 +29,7 @@ class AuthorBook(Base):
                 backref=backref("author_book",
                                 cascade="all, delete-orphan")
             )
-
     author = relationship("Author")
-
     def __init__(self, author=None, book=None, special_key=None):
         self.author = author
         self.book = book
