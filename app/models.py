@@ -27,9 +27,8 @@ class Book(Base):
 
 class AuthorBook(Base):
     __tablename__ = 'author_book'
-    id = Column(Integer, primary_key=True)
-    author_id = Column(Integer, ForeignKey('author.id'), primary_key=False)
-    book_id = Column(Integer, ForeignKey('book.id'), primary_key=False)
+    author_id = Column(Integer, ForeignKey('author.id'), primary_key=True)
+    book_id = Column(Integer, ForeignKey('book.id'), primary_key=True)
 
     book = relationship(Book,
                 backref=backref("author_book",

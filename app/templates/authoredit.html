@@ -16,7 +16,7 @@
                 </div>
               </div>
             {% endif %}
-            {{ render_field(form.name,class="form-control") }}
+            {{ render_field(form.name,class="form-control")|safe }}
             <input type="submit" class="btn btn-success btn-lg btn-sm" value="Сохранить">
             {% if author.id %}
             <a type="button" data-toggle="modal" data-target="#confirm-delete" data-href="{{ url_for('delete', instance='author', obj_id=author.id) }}" class="btn btn-danger btn-lg btn-sm">Удалить</a>

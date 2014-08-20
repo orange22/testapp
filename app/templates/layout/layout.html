@@ -19,13 +19,11 @@
           {% if session['username'] %}
           <p class="navbar-text pull-right">Вы вошли как <strong>{{ session['username'] }}</strong>  <a type="button" href="/logout" class="btn btn-primary btn-lg btn-xs">Выход</a></p>
           {% else %}
+          {% from "_formhelpers.html" import render_input %}
           <form class="navbar-form navbar-right" action="/login" method="post" role="form">
-            <div class="form-group">
-              <input type="text" name="username" placeholder="Login" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="password" name="password" placeholder="Password" class="form-control">
-            </div>
+            {{ loginform.hidden_tag() }}
+            {{ render_input(loginform.username,class="form-control") }}
+            {{ render_input(loginform.password,class="form-control") }}
             <button type="submit" class="btn btn-success">Войти</button>
           </form>
           {% endif %}

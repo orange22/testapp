@@ -8,28 +8,33 @@ from database import db_session
 from flask import render_template, session, request, redirect, url_for
 
 
+
 @app.route("/")
 def index():
     form = SearchForm()
+    loginform = LoginForm()
     books=Book.query.order_by(desc('id')).limit(5).all()
     authors=Author.query.order_by(desc('id')).limit(5).all()
-    return render_template('index.html',books=books,authors=authors,form=form)
+    return render_template('index.html',books=books,authors=authors,form=form,loginform=loginform)
 
 @app.route("/authors")
 def authors():
+    loginform = LoginForm()
     authors=Author.query.order_by(desc('id')).all()
-    return render_template('authors.html',authors=authors)
+    return render_template('authors.html',authors=authors,loginform=loginform)
 
 @app.route("/books")
 def books():
+    loginform = LoginForm()
     books=Book.query.order_by(desc('id')).all()
-    return render_template('books.html',books=books)
+    return render_template('books.html',books=books,loginform=loginform)
 
 
 @app.route('/author/<int:author_id>')
 def show_author(author_id):
+    loginform = LoginForm()
     author=Author.query.filter_by(id=author_id).first()
-    return render_template('author.html',author=author)
+    return render_template('author.html',author=author,loginform=loginform)
 
 @app.route('/<instance>/delete/<int:obj_id>')
 def delete(instance=None,obj_id=None):
@@ -67,33 +72,44 @@ def edit_author(author_id=None):
 
 @app.route('/book/<int:book_id>')
 def show_book(book_id):
+    loginform = LoginForm()
     book=Book.query.filter_by(id=book_id).first()
-    return render_template('book.html',book=book)
+    return render_template('book.html',book=book,loginform=loginform)
 
 @app.route('/book/create')
 @app.route('/book/edit', methods=['GET', 'POST'])
 @app.route('/book/edit/<int:book_id>')
 def edit_book(book_id=None):
-    model=Book.query.filter_by(id=book_id).first()
+    if not session['username']:
+        return redirect(url_for('index'))
+
     form = BookForm(request.form)
+    form.authors.choices = [(g.id, g.name) for g in Author.query.all()]
+    model=Book.query.filter_by(id=book_id).first()
+
+
     if book_id:
         form.id.data=model.id
         form.name.data=model.name
         form.authors.data=map(str, [(g.id) for g in model.authors])
 
     if request.method == 'POST':
+        form.authors.choices = [(g.id, g.name) for g in Author.query.all()]
+        form.authors.choices = form.authors.data
+        if form.validate():
+            if form.id.data:
+                model=Book.query.filter_by(id=form.id.data).first()
+                model.name = form.name.data
+                model.authors = Author.query.filter(Author.id.in_(form.authors.data)).all()
+                db_session.commit()
+            else:
+                book = Book(form.name.data,Author.query.filter(Author.id.in_(form.authors.data)).all())
+                db_session.add(book)
 
-        if form.id.data:
-            model=Book.query.filter_by(id=form.id.data).first()
-            model.name = form.name.data
-            model.authors = Author.query.filter(Author.id.in_(form.authors.data)).all()
             db_session.commit()
+            return redirect('/')
         else:
-            book = Book(form.name.data,Author.query.filter(Author.id.in_(form.authors.data)).all())
-            db_session.add(book)
-
-        db_session.commit()
-        return redirect('/')
+           form.authors.choices = [(g.id, g.name) for g in Author.query.all()]
 
 
     return render_template('bookedit.html',book=model,form=form)
@@ -101,7 +117,8 @@ def edit_book(book_id=None):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST' and request.form['username']=='admin' and request.form['password']=='admin':
+    loginform=LoginForm(request.form)
+    if request.method == 'POST' and loginform.validate():
         session['username'] = request.form['username']
     return redirect(url_for('index'))
 
@@ -113,6 +130,7 @@ def logout():
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
+    loginform = LoginForm()
     searchform = SearchForm()
     if request.form:
         term = request.form['search']
@@ -121,7 +139,7 @@ def search():
     books=Book.query.\
         join(Book.authors).\
         filter(or_(Book.name.like('%'+term+'%'),Author.name.like('%'+term+'%')))
-    return render_template('search.html',books=books,form=searchform)
+    return render_template('search.html',books=books,form=searchform,loginform=loginform)
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
